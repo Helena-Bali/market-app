@@ -3,9 +3,27 @@
 import {useState} from "react";
 import {Button} from "@/components/Button/Button";
 
+const items = [{
+    "id": 1,
+    "image_url": "https://placehold.co/400x300/EEE/31343C?font=raleway&text=Product+1",
+    "title": "Bose Смартфон Premium",
+    "description": "Отличный мультимедийный продукт с отличной производительностью",
+    "price": 49294
+  },
+  {
+    "id": 2,
+    "image_url": "https://placehold.co/400x300/EEE/31343C?font=raleway&text=Product+1",
+    "title": "Bose Смартфон Premium",
+    "description": "Отличный мультимедийный продукт с отличной производительностью",
+    "price": 49294
+  }]
+
+const customerPhone = '+7 (999) 123-45-67';
+
 export const Cart = () => {
 
     const [error, setError] = useState(false);
+
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const input = event.target.value.replace(/\D/g, '');

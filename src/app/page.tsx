@@ -2,12 +2,29 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Review } from "@/components/Review/Review";
+import { Cart } from "@/components/Cart/Cart";
+import { Card } from "@/components/Card/Card";
 
 interface ReviewType {
     id: number;
     text: string;
     sanitizedText?: string;
 }
+
+const products = [{
+    "id": 1,
+    "image_url": "https://placehold.co/400x300/EEE/31343C?font=raleway&text=Product+1",
+    "title": "Bose Смартфон Premium",
+    "description": "Отличный мультимедийный продукт с отличной производительностью",
+    "price": 49294
+  },
+  {
+    "id": 2,
+    "image_url": "https://placehold.co/400x300/EEE/31343C?font=raleway&text=Product+1",
+    "title": "Bose Смартфон Premium",
+    "description": "Отличный мультимедийный продукт с отличной производительностью",
+    "price": 49294
+  }]
 
 export default function Home() {
   
@@ -40,7 +57,12 @@ export default function Home() {
         <main className="flex min-h-screen flex-col items-center justify-start gap-32">
             <Review reviews={reviews} />
             <div className='w-full flex flex-col justify-center items-center'>
-              
+                <Cart/> 
+                <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
+                    {products?.map((product) => (
+                        <Card key={product.id} product={product} />
+                    ))}
+                </div>
                 <div ref={sentinelRef} className="h-20" />
             </div>
         </main>
