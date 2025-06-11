@@ -2,28 +2,14 @@
 
 import {useState} from "react";
 import {Button} from "@/components/Button/Button";
-
-const items = [{
-    "id": 1,
-    "image_url": "https://placehold.co/400x300/EEE/31343C?font=raleway&text=Product+1",
-    "title": "Bose Смартфон Premium",
-    "description": "Отличный мультимедийный продукт с отличной производительностью",
-    "price": 49294
-  },
-  {
-    "id": 2,
-    "image_url": "https://placehold.co/400x300/EEE/31343C?font=raleway&text=Product+1",
-    "title": "Bose Смартфон Premium",
-    "description": "Отличный мультимедийный продукт с отличной производительностью",
-    "price": 49294
-  }]
-
-const customerPhone = '+7 (999) 123-45-67';
+import {useAppDispatch, useAppSelector} from "@/store/hooks";
+import {addToCart, removeFromCart, updateCustomerPhone, resetCart} from "@/store/slices/cartSlice";
+import {createOrder} from "@/api/api";
 
 export const Cart = () => {
-
+    const dispatch = useAppDispatch();
+    const {items, customerPhone} = useAppSelector(state => state.cart);
     const [error, setError] = useState(false);
-
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const input = event.target.value.replace(/\D/g, '');
@@ -42,10 +28,38 @@ export const Cart = () => {
             formattedInputValue += '-' + input.substring(9, 11);
         }
 
-    
+        dispatch(updateCustomerPhone(formattedInputValue));
         setError(false);
     };
 
+    const handleSubmit = async () => {
+        if (customerPhone.replace(/\D/g, '').length === 11) {
+            if (items.length > 0) {
+                const orderItems = items.map((item) => ({id: item.product.id, quantity: item.count}));
+                const digitsOnly = customerPhone.replace(/\D/g, '');
+                const order = {
+                    phone: digitsOnly,
+                    cart: orderItems
+                };
+                try {
+                    const orderResponse = await createOrder(order);
+                    if (orderResponse.success === 1) {
+                        const dialog = document.getElementById('dialog');
+                        dialog?.classList.remove('hidden');
+                        dispatch(resetCart());
+                        setTimeout(() => {
+                            dialog?.classList.add('hidden');
+                        }, 3000);
+                    }
+                } catch (error) {
+                    console.error('Order error:', error);
+                }
+            }
+        } else {
+            setError(true);
+            setTimeout(() => setError(false), 3000);
+        }
+    };
 
     return (
         <div className='flex flex-col justify-start items-center sm:items-start bg-[#D9D9D9] rounded-2xl w-full md:w-full sm:max-w-[600px] px-3 py-2 gap-3 mb-11 sm:mx-auto'>
@@ -53,11 +67,11 @@ export const Cart = () => {
 
             {items.map((item) => (
                 <div className='w-full text-black grid grid-cols-[3fr_1fr_2fr_1fr] items-center gap-2 sm:max-w-[500px]'
-                     key={item.id}>
-                    <p className='text-nowrap truncate'>{item.title}</p>
+                     key={item.product.id}>
+                    <p className='text-nowrap truncate'>{item.product.title}</p>
                     <span className='text-nowrap truncate'>{`x${item.count}`}</span>
-                    <span className='text-nowrap truncate'>{`${item.price * item.count}₽`}</span>
-                    <button>Убрать</button>
+                    <span className='text-nowrap truncate'>{`${item.product.price * item.count}₽`}</span>
+                    <button onClick={() => dispatch(removeFromCart(item.product.id))}>Убрать</button>
                 </div>
             ))}
 
@@ -72,7 +86,7 @@ export const Cart = () => {
                 {error && (
                     <span className="absolute bottom-32 sm:bottom-14 sm:left-5 text-red-500">Телефон введен неполностью</span>
                 )}
-                <Button  size={'full'} title={'заказать'}/>
+                <Button onClick={handleSubmit} disabled={items.length === 0} size={'full'} title={'заказать'}/>
             </div>
             <div id="dialog"
                  className="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center ">
