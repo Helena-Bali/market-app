@@ -2,7 +2,9 @@ import axios from 'axios';
 import { Order } from '@/types';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://o-complex.com:1337/',
+  baseURL: process.env.NODE_ENV === 'production' 
+    ? '/api'  // для Vercel
+    : 'http://o-complex.com:1337/',
 });
 
 export interface Review {
