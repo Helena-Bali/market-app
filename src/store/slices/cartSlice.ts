@@ -13,7 +13,7 @@ interface CartState {
 
 const initialState: CartState = {
     items: [],
-    customerPhone: '+7'
+    customerPhone: '+7 (___) ___-__-__'
 };
 
 const cartSlice = createSlice({
@@ -28,19 +28,34 @@ const cartSlice = createSlice({
             } else {
                 state.items.push({ product, count });
             }
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('cartState', JSON.stringify(state));
+            }
         },
         removeFromCart: (state, action: PayloadAction<number>) => {
             state.items = state.items.filter(item => item.product.id !== action.payload);
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('cartState', JSON.stringify(state));
+            }
         },
         updateCustomerPhone: (state, action: PayloadAction<string>) => {
             state.customerPhone = action.payload;
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('cartState', JSON.stringify(state));
+            }
         },
         resetCart: (state) => {
             state.items = [];
-            state.customerPhone = '+7';
+            state.customerPhone = '+7 (___) ___-__-__';
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('cartState', JSON.stringify(state));
+            }
+        },
+        loadState: (state, action: PayloadAction<CartState>) => {
+            return action.payload;
         }
     }
 });
 
-export const { addToCart, removeFromCart, updateCustomerPhone, resetCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateCustomerPhone, resetCart, loadState } = cartSlice.actions;
 export default cartSlice.reducer; 

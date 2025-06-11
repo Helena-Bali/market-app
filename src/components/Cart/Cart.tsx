@@ -1,9 +1,9 @@
 "use client"
 
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {Button} from "@/components/Button/Button";
 import {useAppDispatch, useAppSelector} from "@/store/hooks";
-import {addToCart, removeFromCart, updateCustomerPhone, resetCart} from "@/store/slices/cartSlice";
+import {addToCart, removeFromCart, updateCustomerPhone, resetCart, loadState} from "@/store/slices/cartSlice";
 import {createOrder} from "@/api/api";
 
 export const Cart = () => {
@@ -11,25 +11,53 @@ export const Cart = () => {
     const {items, customerPhone} = useAppSelector(state => state.cart);
     const [error, setError] = useState(false);
 
+    useEffect(() => {
+        const savedState = localStorage.getItem('cartState');
+        if (savedState) {
+            try {
+                const parsedState = JSON.parse(savedState);
+                dispatch(loadState(parsedState));
+            } catch (err) {
+                console.error('Error loading state from localStorage:', err);
+            }
+        }
+    }, [dispatch]);
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const input = event.target.value.replace(/\D/g, '');
-        let formattedInputValue = '+7';
+        let formattedInputValue = '+7 (___) ___-__-__';
 
         if (input.length > 1) {
-            formattedInputValue += ' (' + input.substring(1, 4);
-        }
-        if (input.length > 4) {
-            formattedInputValue += ') ' + input.substring(4, 7);
-        }
-        if (input.length > 7) {
-            formattedInputValue += '-' + input.substring(7, 9);
-        }
-        if (input.length > 9) {
-            formattedInputValue += '-' + input.substring(9, 11);
+            const areaCode = input.substring(1, 4).padEnd(3, '_');
+            const firstPart = input.substring(4, 7).padEnd(3, '_');
+            const secondPart = input.substring(7, 9).padEnd(2, '_');
+            const thirdPart = input.substring(9, 11).padEnd(2, '_');
+            
+            formattedInputValue = `+7 (${areaCode}) ${firstPart}-${secondPart}-${thirdPart}`;
+        } else if (input.length === 0) {
+            formattedInputValue = '+7 (___) ___-__-__';
         }
 
         dispatch(updateCustomerPhone(formattedInputValue));
         setError(false);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Backspace' || event.key === 'Delete') {
+            const currentValue = customerPhone.replace(/\D/g, '');
+            if (currentValue.length > 1) {
+                const newValue = currentValue.slice(0, -1);
+                const areaCode = newValue.substring(1, 4).padEnd(3, '_');
+                const firstPart = newValue.substring(4, 7).padEnd(3, '_');
+                const secondPart = newValue.substring(7, 9).padEnd(2, '_');
+                const thirdPart = newValue.substring(9, 11).padEnd(2, '_');
+                
+                const formattedValue = `+7 (${areaCode}) ${firstPart}-${secondPart}-${thirdPart}`;
+                dispatch(updateCustomerPhone(formattedValue));
+            } else {
+                dispatch(updateCustomerPhone('+7 (___) ___-__-__'));
+            }
+        }
     };
 
     const handleSubmit = async () => {
@@ -81,7 +109,8 @@ export const Cart = () => {
                     type="tel"
                     value={customerPhone}
                     onChange={handleChange}
-                    placeholder="+7 (__) ___ __-__"
+                    onKeyDown={handleKeyDown}
+                    placeholder="+7 (___) ___-__-__"
                 />
                 {error && (
                     <span className="absolute bottom-32 sm:bottom-14 sm:left-5 text-red-500">Телефон введен неполностью</span>
