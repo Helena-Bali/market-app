@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+      unoptimized: true,
+      domains: ['encrypted-tbn2.gstatic.com'],
+  },
+  reactStrictMode: true,
+}
 
 export default nextConfig;
