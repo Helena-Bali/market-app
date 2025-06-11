@@ -11,7 +11,6 @@ export default function Home() {
     const [reviews, setReviews] = useState<ReviewType[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [page, setPage] = useState<number>(1);
-    const [total, setTotal] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
@@ -25,7 +24,6 @@ export default function Home() {
         try {
             const newProducts: ProductsResponse = await getProducts(page, 20);
             setProducts(prevProducts => [...prevProducts, ...(newProducts?.items || [])]);
-            setTotal(newProducts.total);
             setHasMore(newProducts.items.length > 0 && products.length < newProducts.total);
         } catch (error) {
             console.error('Error loading products:', error);
@@ -55,7 +53,6 @@ export default function Home() {
             ]);
             setProducts(productsData?.items || []);
             setReviews(reviewsData);
-            setTotal(productsData.total);
             setHasMore(productsData.items.length > 0);
             initializeObserver();
         } catch (error) {

@@ -3,7 +3,7 @@
 import {useState, useEffect} from "react";
 import {Button} from "@/components/Button/Button";
 import {useAppDispatch, useAppSelector} from "@/store/hooks";
-import {addToCart, removeFromCart, updateCustomerPhone, resetCart, loadState} from "@/store/slices/cartSlice";
+import {removeFromCart, updateCustomerPhone, resetCart, loadState} from "@/store/slices/cartSlice";
 import {createOrder} from "@/api/api";
 
 export const Cart = () => {
