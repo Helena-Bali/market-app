@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Market App
 
-## Getting Started
+Интернет-магазин с адаптивным дизайном, бесконечной прокруткой и корзиной покупок.
 
-First, run the development server:
+## Реализованный функционал
 
+### Основные функции
+- ✅ Адаптивный дизайн для мобильных устройств и планшетов
+- ✅ Отображение отзывов из JSON
+- ✅ Загрузка товаров через API с пагинацией
+- ✅ Бесконечная прокрутка для подгрузки новых товаров
+- ✅ Интерактивная корзина с возможностью изменения количества товаров
+- ✅ Сохранение состояния корзины и номера телефона в localStorage
+- ✅ Маска ввода номера телефона
+- ✅ Валидация номера телефона при оформлении заказа
+- ✅ Попап с уведомлением об успешном заказе
+
+### Дополнительные улучшения
+- ✅ Обработка ошибок загрузки изображений (запасное изображение)
+- ✅ Оптимизация изображений через Next.js Image
+- ✅ SSR для быстрой первоначальной загрузки
+- ✅ Типизация через TypeScript
+- ✅ Управление состоянием через Redux Toolkit
+- ✅ Адаптивная верстка с использованием Tailwind CSS
+
+## Технический стек
+
+- **Frontend Framework**: Next.js 14
+- **Language**: TypeScript
+- **State Management**: Redux Toolkit
+- **Styling**: Tailwind CSS
+- **API Integration**: Fetch API
+- **Image Optimization**: Next.js Image
+- **Form Handling**: React Hooks
+- **Local Storage**: Browser API
+
+## Особенности реализации
+
+### Производительность
+- Использование SSR для быстрой первоначальной загрузки
+- Оптимизация изображений через Next.js Image
+- Ленивая загрузка контента при прокрутке
+- Кэширование данных в localStorage
+
+### Безопасность
+- Валидация ввода номера телефона
+- Безопасное хранение данных в localStorage
+- Защита от XSS через санитизацию данных
+
+
+## Установка и запуск
+
+1. Клонируйте репозиторий:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone [url-репозитория]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Установите зависимости:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Запустите проект в режиме разработки:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Откройте [http://localhost:3000](http://localhost:3000) в браузере
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+### Особенности реализации
+- Использование Next.js для SSR и оптимизации производительности
+- Redux Toolkit для управления состоянием
+- Tailwind CSS для стилизации
+- TypeScript для типизации
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
